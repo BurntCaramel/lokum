@@ -4,14 +4,17 @@
   "description": "Host a website from JSON API. e.g. Trello",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "node ./example.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Patrick Smith",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.2",
-    "hapi": "^15.1.1"
+    "hapi": "^15.1.1",
+    "lodash": "^4.16.4",
+    "ramda": "^0.22.1",
+    "remarkable": "^1.7.1"
   },
   "devDependencies": {},
   "repository": {
