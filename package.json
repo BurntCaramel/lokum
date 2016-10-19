@@ -1,0 +1,31 @@
+{
+  "name": "lokum",
+  "version": "0.1.0",
+  "description": "Host a website from JSON API. e.g. Trello",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Patrick Smith",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.15.2",
+    "hapi": "^15.1.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RoyalIcing/lokum.git"
+  },
+  "keywords": [
+    "lokum",
+    "web",
+    "server",
+    "trello"
+  ],
+  "bugs": {
+    "url": "https://github.com/RoyalIcing/lokum/issues"
+  },
+  "homepage": "https://github.com/RoyalIcing/lokum#readme"
+}
