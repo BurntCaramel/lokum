@@ -1,4 +1,4 @@
-![Lokum logo](docs/logo.png)
+![Lokum logo](docs/lokum-128.png)
 
 # lokum
 
