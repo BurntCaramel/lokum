@@ -11,10 +11,12 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.2",
+    "creed": "^1.0.4",
     "hapi": "^15.1.1",
     "lodash": "^4.16.4",
     "ramda": "^0.22.1",
-    "remarkable": "^1.7.1"
+    "remarkable": "^1.7.1",
+    "silverscreen": "^0.2.0"
   },
   "devDependencies": {},
   "repository": {
