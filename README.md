@@ -15,7 +15,7 @@ const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6W
 startServerForBoard(boardID)
 ```
 
-## Trello
+## Instructions for creating a website board in Trello
 
 Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: to other text** become key-value pairs.
 
@@ -28,8 +28,8 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 
 ### Add cards to each page list for the content on the page
 - A card’s title becomes an `<h2>`.
-- The card’s description is parsed as markdown, and follows the `<h2>.
-- Attached images become `<img>`
+- The card’s description is parsed as markdown, and follows the `<h2>`.
+- Attached images become `<img>` above the content
 
 #### Links
 - Use the **#link** tag pair to make the subheading link out to a URL.
@@ -38,7 +38,7 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - Add **#primary** to the subheading you want to make a `<h1>` instead of an `<h2>`. Similarly **#tertiary** can be used for `<h3>`.
 
 #### Posts
-- Use the **#slug** tag pair to specify a child-page. The content stays part of the parent page, but also appears solely as a page at its slug’s path. The `<h2>` links out to the child-page.
+- Use the **#slug** tag pair to specify a child-page. The content stays part of the parent page, but also appears solely as a page at its slug’s path. The `<h2>` then links out to the child-page.
 
 #### Navigation
 - Add a card with name **#nav** to specify that the cards following should be together wrapped in a `<nav>`.
