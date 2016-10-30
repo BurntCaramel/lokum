@@ -17,7 +17,7 @@ startServerForBoard(boardID)
 
 ## Instructions for creating a website board in Trello
 
-Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: to other text** become key-value pairs.
+Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
 
 ### Create a board in Trello, and make it public.
 
