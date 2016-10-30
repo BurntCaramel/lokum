@@ -2,7 +2,7 @@
 
 # lokum
 
-Host a website from JSON API. e.g. Trello
+Manage your website’s content using a Trello board. You can preview your boards here: https://lokum.icing.space
 
 ## Example
 
