@@ -4,7 +4,7 @@ const R = require('ramda')
 
 const { routesForTrelloData, promiseEnhancedTrelloCards } = require('./trello')
 
-function startServerForBoard(boardID) {
+function startServerForBoard(boardID, { seo = true } = {}) {
     const server = new Hapi.Server()
     server.connection({
         address: process.env.HOST,
@@ -23,6 +23,24 @@ function startServerForBoard(boardID) {
                 reply(JSON.stringify(boardJSON, null, 2))
             }
         })
+
+        if (seo) {
+            server.route({
+                method: 'GET',
+                path: '/robots.txt',
+                handler(request, reply) {
+                    reply(
+`User-agent: *
+Disallow:
+`
+
+// Sitemap: https://burntcaramel.github.io/sitemap.xml
+                    ).type('text/plain')
+                }
+            })
+
+            // TODO: sitemap
+        }
 
         promiseEnhancedTrelloCards(boardJSON.cards)
         .then((cards) => {
