@@ -1,16 +1,17 @@
 {
   "name": "lokum",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Host a website from JSON API. e.g. Trello",
   "main": "lib/index.js",
   "module": "src/index.js",
   "files": [
     "index.js",
     "lib",
-    "src"
+    "src",
+    "start.js"
   ],
   "scripts": {
-    "start": "node ./example.js",
+    "start": "node ./start.js",
     "compile": "babel --presets es2015 -d lib/ src/",
     "prepublish": "npm run compile",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -15,6 +15,12 @@ const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6W
 startServerForBoard(boardID)
 ```
 
+### Deploying with [Now](https://zeit.co/now)
+
+```
+now -e TRELLO_BOARD_ID=mQ6WXDAQ
+```
+
 ## Instructions for creating a website board in Trello
 
 Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
