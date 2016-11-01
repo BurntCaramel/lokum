@@ -110,7 +110,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         // Image scale factor
         const scaleFactor = resolveContent(tags.scalefactor, 1.0, parseFloat)
         // Attached images
-        imagesHTML = R.chain(({ previews }) => {
+        const imagesHTML = R.chain(({ previews }) => {
             if (!previews) { return [] }
 
             const preview = R.last(previews)
