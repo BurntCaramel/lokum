@@ -4,7 +4,6 @@ const { infoForVideoWithURL } = require('silverscreen')
 
 const parseElement = require('./parseElement')
 const renderMarkdown = require('./renderMarkdown')
-const htmlTemplate = require('./htmlTemplate')
 const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
 
@@ -333,6 +332,8 @@ function routesForTrelloData({ lists, cards: allCards }) {
             return routes
         }
 
+        const amp = resolveContent(tags.amp, false, Boolean)
+
         const bodyClasses = (resolveContent(tags.class) || '').split(' ')
 
         const { metaCards, contentCards } = groupCards(cards)
@@ -341,26 +342,32 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         const bodyHTML = globalAboveHTML + contentHTML  
         const metaHTML = renderMetaCards(globalMetaCards.concat(metaCards))
-        const html = htmlTemplate({
-            title,
-            metaHTML,
-            bodyClasses,
-            bodyHTML
-        })
 
-        routes.push.apply(routes, createRoutesForHTML({ path, html }))
+        routes.push.apply(routes, createRoutesForHTML({
+            path,
+            htmlOptions: {
+                title,
+                metaHTML,
+                bodyClasses,
+                bodyHTML
+            },
+            amp
+        }))
 
         if (children.length > 0) {
             children.forEach(({ slug, path, title, html: contentHTML }) => {
                 const bodyHTML = renderContentHTML(globalAboveHTML + contentHTML)
-                const html = htmlTemplate({
-                    title,
-                    metaHTML,
-                    bodyClasses,
-                    bodyHTML
-                })
 
-                routes.push.apply(routes, createRoutesForHTML({ path, html }))
+                routes.push.apply(routes, createRoutesForHTML({
+                    path,
+                    htmlOptions: {
+                        title,
+                        metaHTML,
+                        bodyClasses,
+                        bodyHTML
+                    },
+                    amp
+                }))
             })
         }
 
