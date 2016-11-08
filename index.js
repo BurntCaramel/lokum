@@ -1,1 +1,1 @@
-exports.startServerForBoard = require('./lib/startServerForBoard')
+module.exports = require('./lib')
