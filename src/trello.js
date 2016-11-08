@@ -6,6 +6,7 @@ const parseElement = require('./parseElement')
 const renderMarkdown = require('./renderMarkdown')
 const htmlTemplate = require('./htmlTemplate')
 const htmlElement = require('./htmlElement')
+const createRoutesForHTML = require('./createRoutesForHTML')
 
 function groupCards(cards) {
     let [ metaCards, notMetaCards ] = R.partition((card) => (card.name === '#meta'), cards)
@@ -347,13 +348,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
             bodyHTML
         })
 
-        routes.push({
-            method: 'GET',
-            path,
-            handler(request, reply) {
-                reply(html)
-            }
-        })
+        routes.push.apply(routes, createRoutesForHTML({ path, html }))
 
         if (children.length > 0) {
             children.forEach(({ slug, path, title, html: contentHTML }) => {
@@ -365,13 +360,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
                     bodyHTML
                 })
 
-                routes.push({
-                    method: 'GET',
-                    path,
-                    handler(request, reply) {
-                        reply(html)
-                    }
-                })
+                routes.push.apply(routes, createRoutesForHTML({ path, html }))
             })
         }
 
