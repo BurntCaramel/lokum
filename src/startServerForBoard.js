@@ -13,7 +13,7 @@ function startServerForBoard(boardID, { seo = true } = {}) {
 
     Axios.get(`https://trello.com/b/${ boardID }.json`)
     .then(response => {
-        console.log('Loaded from Trello')
+        console.log('Loaded from Trello', boardID)
         const boardJSON = response.data
 
         server.route({
