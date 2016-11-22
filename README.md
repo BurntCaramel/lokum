@@ -15,17 +15,6 @@ const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6W
 startServerForBoard(boardID)
 ```
 
-## Deploying with [Now](https://zeit.co/now)
-
-```
-now -e TRELLO_BOARD_ID=mQ6WXDAQ
-```
-
-With reloading:
-```
-now -e TRELLO_BOARD_ID=mQ6WXDAQ -e RELOAD_SECRET=XXXXXXXXXXXXXXX
-```
-
 ## Instructions for creating a website board in Trello
 
 Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
@@ -70,8 +59,25 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - A list with name **#redirects**
 - Each card must have **#from** and **#to** tag pairs for the original _(from)_ path and destination _(to)_ path for a redirect.
 
+
 ## Reloading with Google Authenticator
 
 1. [Generate a secret](https://sedemo-mktb.rhcloud.com), and scan the QR code into your Google Authenticator app.
 2. Use that secret as environment variable `RELOAD_SECRET`.
 3. Visit `/-reload/:token` to reload with fresh data from Trello.
+
+
+## Deploying with [Now](https://zeit.co/now)
+
+```
+npm install lokum --save
+echo "require('lokum/start')" > index.js
+echo '"scripts": {"start": "node ./index.js"}' > package.json
+now -e TRELLO_BOARD_ID=mQ6WXDAQ
+```
+
+With reloading:
+```
+... (same as above, except last line is:)
+now -e TRELLO_BOARD_ID=mQ6WXDAQ -e RELOAD_SECRET=XXXXXXXXXXXXXXX
+```
