@@ -1,10 +1,11 @@
 const Hapi = require('hapi')
 const Axios = require('axios')
 const R = require('ramda')
+const speakeasy = require('speakeasy')
 
 const { routesForTrelloData, promiseEnhancedTrelloCards } = require('./trello')
 
-function startServerForBoard(boardID, { seo = true } = {}) {
+function startServerForBoard(boardID, { seo = true, reloadSecret } = {}) {
     const server = new Hapi.Server()
     server.connection({
         address: process.env.HOST,
@@ -59,17 +60,31 @@ Disallow:
         })
     }
 
-    server.route({
-        method: 'GET',
-        path: '/-reload/{token}',
-        handler(request, reply) {
-            reloadFromTrello()
-            .then(
-                reply,
-                reply
-            )
-        }
-    })
+    if (reloadSecret) {
+        server.route({
+            method: 'GET',
+            path: '/-reload/{token}',
+            handler(request, reply) {
+                const { token } = request.params
+                const verified = speakeasy.totp.verify({
+                    secret: reloadSecret,
+                    encoding: 'base32',
+                    token
+                })
+
+                if (verified) {
+                    reloadFromTrello()
+                    .then(
+                        reply,
+                        reply
+                    )
+                }
+                else {
+                    reply(new Error('Invalid token'))
+                }
+            }
+        })
+    }
 
     server.route({
         method: '*',

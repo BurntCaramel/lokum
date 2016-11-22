@@ -1,4 +1,5 @@
 // Requires env: TRELLO_BOARD_ID
+// Optional env: RELOAD_SECRET
 
 const startServerForBoard = require('./src/startServerForBoard')
 
@@ -8,4 +9,4 @@ if (!boardID || boardID.length === 0) {
     throw "No board ID specified: env var TRELLO_BOARD_ID"
 }
 
-startServerForBoard(boardID)
+startServerForBoard(boardID, { reloadSecret: process.env.RELOAD_SECRET })
