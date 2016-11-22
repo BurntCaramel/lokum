@@ -6,6 +6,7 @@ const parseElement = require('./parseElement')
 const renderMarkdown = require('./renderMarkdown')
 const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
+const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
 function groupCards(cards) {
     let [ metaCards, notMetaCards ] = R.partition((card) => (card.name === '#meta'), cards)
@@ -52,7 +53,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
     let sectionAttributes = {}
     let itemAttributes = {}
 
-    let { html, children } = cards.reduce((combined, { name, attachments, desc, videoInfo }) => {
+    let { html, children } = cards.reduce((combined, { name, attachments, desc, linkURL, videoInfo, embedInfo }) => {
         // TODO: use element: { text, tags }
         const { text, tags } = parseElement(name)
 
@@ -177,6 +178,14 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
             // Add embedded video
             output += videoInfo.desktopSize.embedCode 
         }
+        else if (embedInfo) {
+            output += htmlElement('iframe', {
+                src: embedInfo.url,
+                width: embedInfo.width || 300,
+                height: embedInfo.height || 200,
+                frameborder: 0
+            })
+        }
 
         let descriptionHTML = ''
         if (desc && desc.length > 0) {
@@ -195,14 +204,14 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
                 output = htmlElement(itemTag, itemAttributes, output) + '\n'
             }
 
-            const url = resolveContent(tags.link)
-            if (url) {
+            //const linkURL = resolveContent(tags.link)
+            if (linkURL) {
                 let classes = []
                 if (tags.cta) {
                     classes.push('cta')
                 }
                 // Change itemTag to 'a' instead?
-                output = htmlElement('a', { href: url, class: classes.join(' ') }, output)
+                output = htmlElement('a', { href: linkURL, class: classes.join(' ') }, output)
             }
 
             if (slug) {
@@ -273,14 +282,29 @@ function routesForRedirectCards(cards) {
     }, [])
 }
 
+const filterLinkAttachmentsURLs = R.pipe(
+    R.filter(
+        R.propEq('isUpload', false)
+    ),
+    R.pluck('url')
+)
+
 const promiseEnhancedCards = R.pipe(
     R.map((card) => {
         const { text, tags } = parseElement(card.name)
 
+        const linkURL = (
+            // #link
+            resolveContent(tags.link) ||
+            // First attached link’s URL
+            filterLinkAttachmentsURLs(card.attachments)[0]
+        )
+
         let promises = [
             resolve(card),
             resolve({
-                element: { text, tags }
+                element: { text, tags },
+                linkURL
             })
         ]
 
@@ -294,6 +318,14 @@ const promiseEnhancedCards = R.pipe(
                     }
                 })
                 .then(R.objOf('videoInfo'))
+            ) 
+        }
+
+        const embed = resolveContent(tags.embed, false)
+        if (embed && !!linkURL) {
+            promises.push(
+                promiseEmbedInfoForURL(linkURL)
+                .then(R.objOf('embedInfo'))
             ) 
         }
 

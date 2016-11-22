@@ -15,7 +15,7 @@ function htmlElement(tagName, attributes, text) {
         return `<${tagName} ${attributeString}>`
     }
 
-    text = text.trim()
+    text = (text || '').trim()
 
     if (text[0] != '<') {
         text = escape(text)

@@ -15,7 +15,7 @@ function htmlPage({ title, metaHTML = '', bodyClasses = [], bodyHTML, language, 
 <meta charset="utf-8">${ amp ? ampScript : '' }
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${ escape(title) }</title>
-${ metaHTML }${ amp ? ampBoilerplateStyle : '' }
+${ amp ? '' : metaHTML }${ amp ? ampBoilerplateStyle : '' }
 </head>
 <body class="${ bodyClasses.join(' ') }">
 ${ bodyHTML }
