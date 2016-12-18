@@ -4,15 +4,10 @@
 
 Manage your website’s content using a Trello board. You can preview your boards here: https://lokum.icing.space
 
-## Example
+## Deploy with [Now](https://zeit.co/now) in one line
 
 ```
-const { startServerForBoard } = require('lokum')
-
-const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com
-
-// Will start a web server on port 80 (or specify env.PORT)
-startServerForBoard(boardID)
+now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ
 ```
 
 ## Instructions for creating a website board in Trello
@@ -60,13 +55,7 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - Each card must have **#from** and **#to** tag pairs for the original _(from)_ path and destination _(to)_ path for a redirect.
 
 
-## Deploy with [Now](https://zeit.co/now) in one line
-
-```
-now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ
-```
-
-## Manual Node.js
+## Usage
 
 ```
 npm install lokum dotenv --save
@@ -76,7 +65,20 @@ echo '"scripts": {"start": "node -r dotenv/config ./index.js"}' > package.json
 npm start
 ```
 
+### Without .env variables
+
+```
+const { startServerForBoard } = require('lokum')
+
+const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com
+
+// Will start a web server on port 80 (or specify env.PORT)
+startServerForBoard(boardID)
+```
+
 ## Reloading with Google Authenticator
+
+Lokum supports live-reloading of a site with the latest content from the source Trello board:
 
 1. [Generate a secret](https://sedemo-mktb.rhcloud.com), and scan the QR code into your Google Authenticator app.
 2. Use that secret as environment variable `RELOAD_SECRET` (`-e RELOAD_SECRET=XXX` with Now).
