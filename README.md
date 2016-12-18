@@ -60,24 +60,24 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - Each card must have **#from** and **#to** tag pairs for the original _(from)_ path and destination _(to)_ path for a redirect.
 
 
+## Deploy with [Now](https://zeit.co/now) in one line
+
+```
+now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ
+```
+
+## Manual Node.js
+
+```
+npm install lokum dotenv --save
+echo "require('lokum/start')" > index.js
+echo "TRELLO_BOARD_ID=mQ6WXDAQ" > .env
+echo '"scripts": {"start": "node -r dotenv/config ./index.js"}' > package.json
+npm start
+```
+
 ## Reloading with Google Authenticator
 
 1. [Generate a secret](https://sedemo-mktb.rhcloud.com), and scan the QR code into your Google Authenticator app.
-2. Use that secret as environment variable `RELOAD_SECRET`.
-3. Visit `/-reload/:token` to reload with fresh data from Trello.
-
-
-## Deploying with [Now](https://zeit.co/now)
-
-```
-npm install lokum --save
-echo "require('lokum/start')" > index.js
-echo '"scripts": {"start": "node ./index.js"}' > package.json
-now -e TRELLO_BOARD_ID=mQ6WXDAQ
-```
-
-With reloading:
-```
-... (same as above, except last line is:)
-now -e TRELLO_BOARD_ID=mQ6WXDAQ -e RELOAD_SECRET=XXXXXXXXXXXXXXX
-```
+2. Use that secret as environment variable `RELOAD_SECRET` (`-e RELOAD_SECRET=XXX` with Now).
+3. Visit `/-reload/:latest-token` to reload with fresh data from Trello.
