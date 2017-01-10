@@ -21,10 +21,10 @@
   "dependencies": {
     "axios": "^0.15.2",
     "cheerio": "^0.22.0",
-    "creed": "^1.0.4",
-    "hapi": "^15.1.1",
+    "creed": "^1.1.1",
+    "hapi": "^16.1.0",
     "lodash": "^4.16.4",
-    "ramda": "^0.22.1",
+    "ramda": "^0.23.0",
     "remarkable": "^1.7.1",
     "silverscreen": "^0.2.0",
     "speakeasy": "^2.0.0"
