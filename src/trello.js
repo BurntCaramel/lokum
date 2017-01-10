@@ -35,11 +35,11 @@ function resolveContent(content, defaultValue, transformer = R.identity) {
 }
 
 const standardMode = {
-    sectionTag: 'section',
+    sectionTag: 'article',
     itemTag: null
 }
 
-const articleMode = {
+const articlesMode = {
     sectionTag: 'section',
     itemTag: 'article'
 }
@@ -79,7 +79,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         }
 
         if (tags.article) {
-            mode = articleMode
+            mode = articlesMode
             itemAttributes = {}
             const className = resolveContent(tags.class)
             if (className) {
