@@ -1,6 +1,6 @@
 {
   "name": "lokum",
-  "version": "0.2.0a1",
+  "version": "0.2.0a2",
   "description": "Host a website from JSON API. e.g. Trello",
   "main": "lib/index.js",
   "module": "src/index.js",
