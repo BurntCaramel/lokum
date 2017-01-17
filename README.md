@@ -2,13 +2,19 @@
 
 # lokum
 
-Manage your website’s content using a Trello board. You can preview your boards here: https://lokum.icing.space
+Manage your website’s content using a Trello board.
+
+## Live online preview
+
+You can preview your boards here: https://lokum.icing.space — just enter the ID of your public Trello board.
+
+- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/
+- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/
 
 ## Deploy with [Now](https://zeit.co/now) in one line
 
-```
-now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ
-```
+1. Install Now: https://zeit.co/now
+2. Run (substituting your public Trello board’s ID): `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ1`
 
 ## Instructions for creating a website board in Trello
 
