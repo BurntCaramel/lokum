@@ -2,7 +2,7 @@
 
 # lokum
 
-Manage your website’s content using a Trello board.
+Manage your website’s content using a Trello board. [Watch it in action here.](https://www.youtube.com/watch?v=GThjBRCbiBk)
 
 ## Live online preview
 
