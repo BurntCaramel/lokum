@@ -8,8 +8,8 @@ Manage your website’s content using a Trello board. [Watch it in action here.]
 
 You can preview your boards here: https://lokum.icing.space — just enter the ID of your public Trello board.
 
-- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/
-- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/
+- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [From this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)
+- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [From this board](https://trello.com/b/kIL3DloM/icing-space)
 
 ## Deploy with [Now](https://zeit.co/now) in one line
 
