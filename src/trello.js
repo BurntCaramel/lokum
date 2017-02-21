@@ -8,13 +8,22 @@ const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
 const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
-function groupCards(cards) {
-    let [ metaCards, notMetaCards ] = R.partition((card) => (card.name === '#meta'), cards)
-    let [ aboveCards, notAboveCards ] = R.partition((card) => (card.name === '#above'), notMetaCards)
-    return { metaCards, aboveCards, contentCards: notAboveCards }
-}
 
-function cardsForID(allCards, listID) {
+const cardHasName = R.propEq('name')
+const cardNameRegex = R.propSatisfies(R.test, 'name')
+const isStrictMetaCard = cardHasName('#meta')
+const isCSSCard = cardNameRegex(/\B#css:/)
+const isLanguageCard = cardNameRegex(/\B#language:/)
+const isAboveContentCard = cardHasName('#above')
+
+const groupCards = R.groupBy(R.cond([
+    [ R.anyPass([isStrictMetaCard, isCSSCard]), R.always('metaCards') ],
+    [ isAboveContentCard, R.always('aboveCards') ],
+    [ isLanguageCard, R.always('languageCards') ],
+    [ R.T, R.always('contentCards') ]
+]))
+
+function cardsForID(listID, allCards) {
     return allCards.filter((card) => (card.idList === listID) && (!card.closed))
 }
 
@@ -258,8 +267,19 @@ function renderContentCards(cards, { defaultTitle, path }) {
 }
 
 function renderMetaCards(cards) {
-    return cards.map(({ desc }) => {
-        return desc
+    return cards.map(card => {
+        if (isStrictMetaCard(card)) {
+            // Raw HTML
+            return card.desc
+        }
+        else {
+            // Convenience via tags
+            const { text, tags } = parseElement(card.name)
+            if (tags.css) {
+                const cssURL = tags.css.text
+                return htmlElement('link', { rel: 'stylesheet', href: cssURL })
+            }
+        }
     }).join('\n')
 }
 
@@ -339,7 +359,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const globalLists = lists.filter(({ name }) => name === '#all')
     const globalCardsGrouped = R.chain(({ id: listID }) => (
         groupCards(
-            cardsForID(allCards, listID)
+            cardsForID(listID, allCards)
         )
     ), globalLists)
     // Meta
@@ -349,7 +369,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const { html: globalAboveHTML } = htmlForCards(globalAboveCards)
 
     return lists.reduce((routes, { name: listName, id: listID }) => {
-        const cards = cardsForID(allCards, listID)
+        const cards = cardsForID(listID, allCards)
 
         // Redirects
         if (listName === '#redirects') {

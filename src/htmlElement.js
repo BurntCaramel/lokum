@@ -1,6 +1,6 @@
 const escape = require('lodash/escape')
 
-const selfClosingTags = new Set(['img', 'link', 'br'])
+const selfClosingTags = new Set(['img', 'link', 'input', 'br', 'hr', 'source', 'track', 'command'])
 
 function htmlElement(tagName, attributes, text) {
     const attributeString = Object.keys(attributes).reduce((list, name) => {
