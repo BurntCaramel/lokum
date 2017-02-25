@@ -273,7 +273,7 @@ function renderMetaCards(cards) {
         }
         else {
             // Convenience via tags
-            const { text, tags } = parseElement(card.name)
+            const { text, tags } = card.element || parseElement(card.name)
             if (tags.css) {
                 const cssURL = tags.css.text
                 return htmlElement('link', { rel: 'stylesheet', href: cssURL })
