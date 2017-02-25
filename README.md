@@ -4,21 +4,22 @@
 
 Manage your website’s content using a Trello board. [Watch it in action here.](https://www.youtube.com/watch?v=GThjBRCbiBk)
 
+## Deploy with [Now](https://zeit.co/now)
+
+1. Install Now: https://zeit.co/now
+2. Find your public Trello board’s ID (e.g. mQ6WXDAQ1)
+3. Run, passing your board ID: `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ1`
+
 ## Live online preview
 
 You can preview your boards here: https://lokum.icing.space — just enter the ID of your public Trello board.
 
-- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [From this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)
-- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [From this board](https://trello.com/b/kIL3DloM/icing-space)
+- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [Made from this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)
+- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [Made from this board](https://trello.com/b/kIL3DloM/icing-space)
 
-## Deploy with [Now](https://zeit.co/now) in one line
+## How to make a website board in Trello
 
-1. Install Now: https://zeit.co/now
-2. Run (substituting your public Trello board’s ID): `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ1`
-
-## Instructions for creating a website board in Trello
-
-Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
+Lokum uses the lofi format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
 
 ### Create a board in Trello, and make it public.
 
@@ -42,10 +43,10 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - Use the **#slug** tag pair to specify a child-page. The content stays part of the parent page, but also appears solely as a page at its slug’s path. The `<h2>` then links out to the child-page.
 
 #### Navigation
-- Add a card with name **#nav** to specify that the cards following should be together wrapped in a `<nav>`.
+- Add a card with name **#nav** to specify that the cards following should be together grouped in a `<nav>`.
 
 #### Article
-- Add a card with name **#article** to specify that the cards following should be each wrapped in an `<article>`.
+- Add a card with name **#article** to specify that the cards following should be each an `<article>`.
 
 #### Metatags, CSS, etc
 - Add a card with name **#meta** to add `<meta>` and `<link>` tags from the card’s description as HTML to the `<head>`. 
@@ -60,28 +61,6 @@ Lokum uses the icing format of hashtagging text. Any trailing **#hashtags** are 
 - A list with name **#redirects**
 - Each card must have **#from** and **#to** tag pairs for the original _(from)_ path and destination _(to)_ path for a redirect.
 
-
-## Usage
-
-```
-npm install lokum dotenv --save
-echo "require('lokum/start')" > index.js
-echo "TRELLO_BOARD_ID=mQ6WXDAQ" > .env
-echo '"scripts": {"start": "node -r dotenv/config ./index.js"}' > package.json
-npm start
-```
-
-### Without .env variables
-
-```
-const { startServerForBoard } = require('lokum')
-
-const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com
-
-// Will start a web server on port 9000 (or specify { port: process.env.PORT })
-startServerForBoard(boardID)
-```
-
 ## Reloading with Google Authenticator
 
 Lokum supports live-reloading of a site with the latest content from the source Trello board:
@@ -92,13 +71,18 @@ Lokum supports live-reloading of a site with the latest content from the source 
 
 ## API
 
-```
-import { startServerForBoard } from 'lokum'
-```
-
 ### `startServerForBoard(boardID, { seo = true, reloadSecret, host, port })`
 - boardID (String): The ID (not full URL) of the Trello Board to use as a content source
 - seo (Boolean): Whether to enable a /robots.txt route
 - reloadSecret (String): The OTP secret
 - host (String): Domain to use as host, usually fine to omit
 - port (String): Port to start the server on
+- Returns a Promise which resolves once the content has loaded and the server is ready
+
+```
+import { startServerForBoard } from 'lokum'
+
+const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com
+
+startServerForBoard(boardID, { port: process.env.PORT })
+```
