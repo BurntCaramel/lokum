@@ -2,7 +2,8 @@ const R = require('ramda')
 const Axios = require('axios')
 const Cheerio = require('cheerio')
 
-function whenSome(f, a) {
+// Function-first
+function maybeMap(f, a) {
     if (!R.isNil(a)) {
         return f(a)
     }
@@ -16,12 +17,12 @@ function promiseEmbedInfoForURL(url) {
     return Axios.get(url)
     .then(({ data }) => {
         const find = Cheerio.load(data)
-        const twitterPlayerURL = whenSome(attrContent, find('meta[name="twitter:player"]'))
+        const twitterPlayerURL = maybeMap(attrContent, find('meta[name="twitter:player"]'))
         if (twitterPlayerURL) {
             return {
                 url: twitterPlayerURL,
-                width: whenSome(attrContent, find('meta[name="twitter:player:width"]')),
-                height: whenSome(attrContent, find('meta[name="twitter:player:height"]'))
+                width: maybeMap(attrContent, find('meta[name="twitter:player:width"]')),
+                height: maybeMap(attrContent, find('meta[name="twitter:player:height"]'))
             }
         }
     })

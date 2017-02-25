@@ -5,11 +5,16 @@ const speakeasy = require('speakeasy')
 
 const { routesForTrelloData, promiseEnhancedTrelloCards } = require('./trello')
 
-function startServerForBoard(boardID, { seo = true, reloadSecret } = {}) {
+function startServerForBoard(boardID, {
+    seo = true,
+    reloadSecret,
+    host,
+    port
+} = {}) {
     const server = new Hapi.Server()
     server.connection({
-        address: process.env.HOST,
-        port: (process.env.PORT || 80)
+        address: host,
+        port
     })
 
     server.route({
@@ -43,7 +48,7 @@ Disallow:
     function reloadFromTrello() {
         return Axios.get(`https://trello.com/b/${ boardID }.json`)
         .then(({ data: boardJSON }) => {
-            console.log('Loaded from Trello', boardID)
+            console.log('Loaded content from Trello', boardID)
 
             return promiseEnhancedTrelloCards(boardJSON.cards)
             .then((cards) => {
@@ -55,7 +60,8 @@ Disallow:
                 const reloadableConnection = reloadableServer.connection({ autoListen: false })
                 reloadableServer.route(routesForTrelloData(enhancedBoardJSON))
 
-                return { success: true }
+                // Used for testing
+                return { boardJSON, enhancedBoardJSON }
             })
         })
     }
@@ -74,10 +80,8 @@ Disallow:
 
                 if (verified) {
                     reloadFromTrello()
-                    .then(
-                        reply,
-                        reply
-                    )
+                    .then(() => reply({ success: true }))
+                    .catch(reply)
                 }
                 else {
                     reply(new Error('Invalid token'))
@@ -90,6 +94,11 @@ Disallow:
         method: '*',
         path: '/{p*}',
         handler(request, reply) {
+            if (!reloadableServer) {
+                reply(new Error('Content has not loaded from Trello'))
+                return
+            }
+
             console.log(request.url, request.params)
             reloadableServer.inject(request.url.href)
             .then((innerResponse) => {
@@ -103,20 +112,21 @@ Disallow:
         }
     })
 
-    reloadFromTrello()
-    .then(
-        () => {
-            server.start()
-        },
-        (error) => {
-            console.error('Error loading from Trello', error)
-        }
-    )
-    
-    // Prevent exit
-    process.stdin.resume()
+    server.start()
 
-    console.log('Started server')
+    return reloadFromTrello()
+    .then(({ boardJSON, enhancedBoardJSON }) => {
+        console.log('Started server')
+        return {
+            // Used for testing
+            internal: {
+                boardJSON,
+                enhancedBoardJSON,
+                server,
+                reloadableServer
+            }
+        }
+    })
 }
 
 module.exports = startServerForBoard

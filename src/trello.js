@@ -8,13 +8,33 @@ const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
 const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
-function groupCards(cards) {
-    let [ metaCards, notMetaCards ] = R.partition((card) => (card.name === '#meta'), cards)
-    let [ aboveCards, notAboveCards ] = R.partition((card) => (card.name === '#above'), notMetaCards)
-    return { metaCards, aboveCards, contentCards: notAboveCards }
-}
 
-function cardsForID(allCards, listID) {
+const cardHasName = R.propEq('name')
+const cardNameRegex = R.pipe(
+    R.test,
+    R.propSatisfies(R.__, 'name')
+)
+const isStrictMetaCard = cardHasName('#meta')
+const isCSSCard = cardNameRegex(/\B#css:/)
+const isLanguageCard = cardNameRegex(/\B#language:/)
+const isAboveContentCard = cardHasName('#above')
+
+const groupCards = R.pipe(
+    R.groupBy(R.cond([
+        [ R.anyPass([isStrictMetaCard, isCSSCard]), R.always('metaCards') ],
+        [ isAboveContentCard, R.always('aboveCards') ],
+        [ isLanguageCard, R.always('languageCards') ],
+        [ R.T, R.always('contentCards') ]
+    ])),
+    R.merge({
+        metaCards: [],
+        aboveCards: [],
+        languageCards: [],
+        contentCards: []
+    })
+)
+
+function cardsForID(listID, allCards) {
     return allCards.filter((card) => (card.idList === listID) && (!card.closed))
 }
 
@@ -95,13 +115,12 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         const slug = resolveContent(tags.slug)
         let childPath
         if (slug) {
-            childPath = R.unless(
-                R.pipe(
-                    R.last,
-                    R.equals('/')
-                ),
-                R.concat(R.__, '/')
-            )(path) + slug
+            // Combine path with slug
+            childPath = R.pipe(
+                R.concat(R.__, '/'),
+                R.concat(R.__, slug),
+                R.replace('//', '/')
+            )(path)
 
             if (!itemTag) {
                 itemTag = 'article'
@@ -145,7 +164,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
                 tagName = 'h2' // #secondary by default
             }
 
-            if (tags.figure || imagesHTML.length > 0) {
+            if (tags.figure || (imagesHTML.length > 0 && !tags.slug)) {
                 itemTag = 'figure'
                 outerTagName = 'figcaption'
                 imagesBefore = true
@@ -258,8 +277,22 @@ function renderContentCards(cards, { defaultTitle, path }) {
 }
 
 function renderMetaCards(cards) {
-    return cards.map(({ desc }) => {
-        return desc
+    return cards.map(card => {
+        if (isStrictMetaCard(card)) {
+            // Raw HTML
+            return card.desc
+        }
+        else {
+            // Convenience via tags
+            const { text, tags } = card.element || parseElement(card.name)
+            if (tags.css) {
+                const cssURL = tags.css.text
+                return htmlElement('link', { rel: 'stylesheet', href: cssURL })
+            }
+            else {
+                return `<!-- Unknown '${card.name}' -->`
+            }
+        }
     }).join('\n')
 }
 
@@ -339,7 +372,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const globalLists = lists.filter(({ name }) => name === '#all')
     const globalCardsGrouped = R.chain(({ id: listID }) => (
         groupCards(
-            cardsForID(allCards, listID)
+            cardsForID(listID, allCards)
         )
     ), globalLists)
     // Meta
@@ -349,7 +382,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const { html: globalAboveHTML } = htmlForCards(globalAboveCards)
 
     return lists.reduce((routes, { name: listName, id: listID }) => {
-        const cards = cardsForID(allCards, listID)
+        const cards = cardsForID(listID, allCards)
 
         // Redirects
         if (listName === '#redirects') {
