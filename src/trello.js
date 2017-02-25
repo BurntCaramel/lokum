@@ -10,18 +10,29 @@ const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
 
 const cardHasName = R.propEq('name')
-const cardNameRegex = R.propSatisfies(R.test, 'name')
+const cardNameRegex = R.pipe(
+    R.test,
+    R.propSatisfies(R.__, 'name')
+)
 const isStrictMetaCard = cardHasName('#meta')
 const isCSSCard = cardNameRegex(/\B#css:/)
 const isLanguageCard = cardNameRegex(/\B#language:/)
 const isAboveContentCard = cardHasName('#above')
 
-const groupCards = R.groupBy(R.cond([
-    [ R.anyPass([isStrictMetaCard, isCSSCard]), R.always('metaCards') ],
-    [ isAboveContentCard, R.always('aboveCards') ],
-    [ isLanguageCard, R.always('languageCards') ],
-    [ R.T, R.always('contentCards') ]
-]))
+const groupCards = R.pipe(
+    R.groupBy(R.cond([
+        [ R.anyPass([isStrictMetaCard, isCSSCard]), R.always('metaCards') ],
+        [ isAboveContentCard, R.always('aboveCards') ],
+        [ isLanguageCard, R.always('languageCards') ],
+        [ R.T, R.always('contentCards') ]
+    ])),
+    R.merge({
+        metaCards: [],
+        aboveCards: [],
+        languageCards: [],
+        contentCards: []
+    })
+)
 
 function cardsForID(listID, allCards) {
     return allCards.filter((card) => (card.idList === listID) && (!card.closed))
