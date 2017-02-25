@@ -15,3 +15,7 @@ if (!boardID || boardID.length === 0) {
 }
 
 startServerForBoard(boardID, { reloadSecret, host, port })
+.catch(error => {
+    console.error('Error loading from Trello', error)
+    throw error
+})
