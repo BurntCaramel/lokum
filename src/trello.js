@@ -164,7 +164,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
                 tagName = 'h2' // #secondary by default
             }
 
-            if (tags.figure || imagesHTML.length > 0) {
+            if (tags.figure || (imagesHTML.length > 0 && !tags.slug)) {
                 itemTag = 'figure'
                 outerTagName = 'figcaption'
                 imagesBefore = true
