@@ -47,10 +47,5 @@
   "bugs": {
     "url": "https://github.com/RoyalIcing/lokum/issues"
   },
-  "homepage": "https://github.com/RoyalIcing/lokum#readme",
-  "ava": {
-    "require": [
-      "babel-register"
-    ]
-  }
+  "homepage": "https://github.com/RoyalIcing/lokum#readme"
 }
