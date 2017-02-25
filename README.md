@@ -78,7 +78,7 @@ const { startServerForBoard } = require('lokum')
 
 const boardID = 'mQ6WXDAQ' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com
 
-// Will start a web server on port 80 (or specify env.PORT)
+// Will start a web server on port 9000 (or specify { port: process.env.PORT })
 startServerForBoard(boardID)
 ```
 
@@ -89,3 +89,16 @@ Lokum supports live-reloading of a site with the latest content from the source 
 1. [Generate a secret](https://sedemo-mktb.rhcloud.com), and scan the QR code into your Google Authenticator app.
 2. Use that secret as environment variable `RELOAD_SECRET` (`-e RELOAD_SECRET=XXX` with Now).
 3. Visit `/-reload/:latest-token` to reload with fresh data from Trello.
+
+## API
+
+```
+import { startServerForBoard } from 'lokum'
+```
+
+### `startServerForBoard(boardID, { seo = true, reloadSecret, host, port })`
+- boardID (String): The ID (not full URL) of the Trello Board to use as a content source
+- seo (Boolean): Whether to enable a /robots.txt route
+- reloadSecret (String): The OTP secret
+- host (String): Domain to use as host, usually fine to omit
+- port (String): Port to start the server on
