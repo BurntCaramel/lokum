@@ -104,13 +104,12 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         const slug = resolveContent(tags.slug)
         let childPath
         if (slug) {
-            childPath = R.unless(
-                R.pipe(
-                    R.last,
-                    R.equals('/')
-                ),
-                R.concat(R.__, '/')
-            )(path) + slug
+            // Combine path with slug
+            childPath = R.pipe(
+                R.concat(R.__, '/'),
+                R.concat(R.__, slug),
+                R.replace('//', '/')
+            )(path)
 
             if (!itemTag) {
                 itemTag = 'article'
