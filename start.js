@@ -3,10 +3,15 @@
 
 const startServerForBoard = require('./src/startServerForBoard')
 
-const boardID = process.env.TRELLO_BOARD_ID
+const {
+    TRELLO_BOARD_ID: boardID,
+    RELOAD_SECRET: reloadSecret,
+    HOST: host,
+    PORT: port = 9000
+} = process.env
 
 if (!boardID || boardID.length === 0) {
-    throw "No board ID specified: env var TRELLO_BOARD_ID"
+    throw "No board ID specified: set env TRELLO_BOARD_ID"
 }
 
-startServerForBoard(boardID, { reloadSecret: process.env.RELOAD_SECRET })
+startServerForBoard(boardID, { reloadSecret, host, port })

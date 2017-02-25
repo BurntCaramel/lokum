@@ -5,11 +5,16 @@ const speakeasy = require('speakeasy')
 
 const { routesForTrelloData, promiseEnhancedTrelloCards } = require('./trello')
 
-function startServerForBoard(boardID, { seo = true, reloadSecret } = {}) {
+function startServerForBoard(boardID, {
+    seo = true,
+    reloadSecret,
+    host,
+    port
+} = {}) {
     const server = new Hapi.Server()
     server.connection({
-        address: process.env.HOST,
-        port: (process.env.PORT || 80)
+        address: host,
+        port
     })
 
     server.route({
@@ -107,6 +112,7 @@ Disallow:
     .then(
         () => {
             server.start()
+            console.log('Started server')
         },
         (error) => {
             console.error('Error loading from Trello', error)
@@ -115,8 +121,6 @@ Disallow:
     
     // Prevent exit
     process.stdin.resume()
-
-    console.log('Started server')
 }
 
 module.exports = startServerForBoard
