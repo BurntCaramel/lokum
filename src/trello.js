@@ -278,6 +278,9 @@ function renderMetaCards(cards) {
                 const cssURL = tags.css.text
                 return htmlElement('link', { rel: 'stylesheet', href: cssURL })
             }
+            else {
+                return `<!-- Unknown '${card.name}' -->`
+            }
         }
     }).join('\n')
 }
