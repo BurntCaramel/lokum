@@ -1,0 +1,116 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/pgwsmith/.nvm/versions/node/v7.7.2/bin/node',
+1 verbose cli   '/Users/pgwsmith/.nvm/versions/node/v7.7.2/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@4.1.2
+3 info using node@v7.7.2
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   escapedName: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/pgwsmith/apps/lokum',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/pgwsmith/.npm/lokum/0.2.2/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/pgwsmith/.npm correctMkdir not in flight; initializing
+10 warn prepublish-on-install As of npm@5, `prepublish` scripts will run only for `npm publish`.
+11 warn prepublish-on-install (In npm@4 and previous versions, it also runs for `npm install`.)
+12 warn prepublish-on-install See the deprecation note in `npm help scripts` for more information.
+13 info lifecycle lokum@0.2.2~prepublish: lokum@0.2.2
+14 verbose lifecycle lokum@0.2.2~prepublish: unsafe-perm in lifecycle true
+15 verbose lifecycle lokum@0.2.2~prepublish: PATH: /Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/bin/node-gyp-bin:/Users/pgwsmith/apps/lokum/node_modules/.bin:/Users/pgwsmith/.nvm/versions/node/v7.7.2/bin:/Users/pgwsmith/.gem/ruby/2.4.0/bin:/Users/pgwsmith/.rubies/ruby-2.4.0/lib/ruby/gems/2.4.0/bin:/Users/pgwsmith/.rubies/ruby-2.4.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+16 verbose lifecycle lokum@0.2.2~prepublish: CWD: /Users/pgwsmith/apps/lokum
+17 silly lifecycle lokum@0.2.2~prepublish: Args: [ '-c', 'npm run build' ]
+18 silly lifecycle lokum@0.2.2~prepublish: Returned: code: 0  signal: null
+19 info lifecycle lokum@0.2.2~prepare: lokum@0.2.2
+20 silly lifecycle lokum@0.2.2~prepare: no script for prepare, continuing
+21 verbose tar pack [ '/Users/pgwsmith/.npm/lokum/0.2.2/package.tgz',
+21 verbose tar pack   '/Users/pgwsmith/apps/lokum' ]
+22 verbose tarball /Users/pgwsmith/.npm/lokum/0.2.2/package.tgz
+23 verbose folder /Users/pgwsmith/apps/lokum
+24 verbose addLocalTarball adding from inside cache /Users/pgwsmith/.npm/lokum/0.2.2/package.tgz
+25 verbose correctMkdir /Users/pgwsmith/.npm correctMkdir not in flight; initializing
+26 silly cache afterAdd lokum@0.2.2
+27 verbose afterAdd /Users/pgwsmith/.npm/lokum/0.2.2/package/package.json not in flight; writing
+28 verbose correctMkdir /Users/pgwsmith/.npm correctMkdir not in flight; initializing
+29 verbose afterAdd /Users/pgwsmith/.npm/lokum/0.2.2/package/package.json written
+30 silly publish { name: 'lokum',
+30 silly publish   version: '0.2.2',
+30 silly publish   description: 'Host a website from JSON API. e.g. Trello',
+30 silly publish   main: 'lib/index.js',
+30 silly publish   module: 'src/index.js',
+30 silly publish   files: [ 'index.js', 'lib', 'src', 'start.js' ],
+30 silly publish   scripts:
+30 silly publish    { start: 'node ./start.js',
+30 silly publish      build: 'babel --ignore \'**/*.test.js\' --presets es2015 -d lib/ src/',
+30 silly publish      prepublish: 'npm run build',
+30 silly publish      test: 'ava' },
+30 silly publish   author: { name: 'Patrick Smith' },
+30 silly publish   license: 'MIT',
+30 silly publish   dependencies:
+30 silly publish    { axios: '^0.15.2',
+30 silly publish      cheerio: '^0.22.0',
+30 silly publish      creed: '^1.1.1',
+30 silly publish      hapi: '^16.1.0',
+30 silly publish      lodash: '^4.16.4',
+30 silly publish      ramda: '^0.23.0',
+30 silly publish      remarkable: '^1.7.1',
+30 silly publish      silverscreen: '^0.2.0',
+30 silly publish      speakeasy: '^2.0.0' },
+30 silly publish   devDependencies:
+30 silly publish    { ava: '^0.18.2',
+30 silly publish      'babel-cli': '^6.18.0',
+30 silly publish      'babel-preset-es2015': '^6.18.0' },
+30 silly publish   repository:
+30 silly publish    { type: 'git',
+30 silly publish      url: 'git+https://github.com/RoyalIcing/lokum.git' },
+30 silly publish   keywords: [ 'lokum', 'web', 'server', 'trello' ],
+30 silly publish   bugs: { url: 'https://github.com/RoyalIcing/lokum/issues' },
+30 silly publish   homepage: 'https://github.com/RoyalIcing/lokum#readme',
+30 silly publish   readme: '![Lokum logo](docs/lokum-128.png)\n\n# lokum\n\nManage your website’s content using a Trello board. [Watch it in action here.](https://www.youtube.com/watch?v=GThjBRCbiBk)\n\n## Deploy with [Now](https://zeit.co/now)\n\n1. Install Now: https://zeit.co/now\n2. Find your public Trello board’s ID (e.g. mQ6WXDAQ1)\n3. Run, passing your board ID: `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ1`\n\n## Live online preview\n\nYou can preview your boards here: https://lokum.icing.space — just enter the ID of your public Trello board.\n\n- My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [Made from this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)\n- Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [Made from this board](https://trello.com/b/kIL3DloM/icing-space)\n\n## How to make a website board in Trello\n\nLokum uses the lofi format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.\n\n### Create a board in Trello, and make it public.\n\n### Add a list for each page\n- The list’s name will become the page’s title\n- The **#path** tag pair lets you specify the absolute path for this page.\n- The **#class** tag pair lets you specify custom classes for this page.\n\n### Add cards to each page list for the content on the page\n- A card’s title becomes an `<h2>`.\n- The card’s description is parsed as markdown, and follows the `<h2>`.\n- Attached images become `<img>` above the content\n\n#### Links\n- Use the **#link** tag pair to make the subheading link out to a URL.\n\n#### Main heading\n- Add **#primary** to the subheading you want to make a `<h1>` instead of an `<h2>`. Similarly **#tertiary** can be used for `<h3>`.\n\n#### Posts\n- Use the **#slug** tag pair to specify a child-page. The content stays part of the parent page, but also appears solely as a page at its slug’s path. The `<h2>` then links out to the child-page.\n\n#### Navigation\n- Add a card with name **#nav** to specify that the cards following should be together grouped in a `<nav>`.\n\n#### Article\n- Add a card with name **#article** to specify that the cards following should be each an `<article>`.\n\n#### Metatags, CSS, etc\n- Add a card with name **#meta** to add `<meta>` and `<link>` tags from the card’s description as HTML to the `<head>`. \n\n### Other lists can also be added for additional behaviour\n\n#### Share on all pages\n- A list named **#all** will have its cards used across all pages, e.g. shared meta tags.\n- Use a card named **#above** for HTML that will be added above every page.\n\n### Path redirects\n- A list with name **#redirects**\n- Each card must have **#from** and **#to** tag pairs for the original _(from)_ path and destination _(to)_ path for a redirect.\n\n## Reloading with Google Authenticator\n\nLokum supports live-reloading of a site with the latest content from the source Trello board:\n\n1. [Generate a secret](https://sedemo-mktb.rhcloud.com), and scan the QR code into your Google Authenticator app.\n2. Use that secret as environment variable `RELOAD_SECRET` (`-e RELOAD_SECRET=XXX` with Now).\n3. Visit `/-reload/:latest-token` to reload with fresh data from Trello.\n\n## API\n\n### `startServerForBoard(boardID, { seo = true, reloadSecret, host, port })`\n- boardID (String): The ID (not full URL) of the Trello Board to use as a content source\n- seo (Boolean): Whether to enable a /robots.txt route\n- reloadSecret (String): The OTP secret\n- host (String): Domain to use as host, usually fine to omit\n- port (String): Port to start the server on\n- Returns a Promise which resolves once the content has loaded and the server is ready\n\n```\nimport { startServerForBoard } from \'lokum\'\n\nconst boardID = \'mQ6WXDAQ\' // From public Trello board https://trello.com/b/mQ6WXDAQ/burntcaramel-com\n\nstartServerForBoard(boardID, { port: process.env.PORT })\n```\n',
+30 silly publish   readmeFilename: 'README.md',
+30 silly publish   gitHead: '55ce4925943d24cd25c03c702b231daa06822d66',
+30 silly publish   _id: 'lokum@0.2.2',
+30 silly publish   _shasum: '35d8e546c66803977b5f1906363f4171b9485d6f',
+30 silly publish   _from: '.' }
+31 info lifecycle lokum@0.2.2~prepublishOnly: lokum@0.2.2
+32 silly lifecycle lokum@0.2.2~prepublishOnly: no script for prepublishOnly, continuing
+33 verbose getPublishConfig undefined
+34 silly mapToRegistry name lokum
+35 silly mapToRegistry using default registry
+36 silly mapToRegistry registry https://registry.npmjs.org/
+37 silly mapToRegistry data Result {
+37 silly mapToRegistry   raw: 'lokum',
+37 silly mapToRegistry   scope: null,
+37 silly mapToRegistry   escapedName: 'lokum',
+37 silly mapToRegistry   name: 'lokum',
+37 silly mapToRegistry   rawSpec: '',
+37 silly mapToRegistry   spec: 'latest',
+37 silly mapToRegistry   type: 'tag' }
+38 silly mapToRegistry uri https://registry.npmjs.org/lokum
+39 verbose publish registryBase https://registry.npmjs.org/
+40 silly publish uploading /Users/pgwsmith/.npm/lokum/0.2.2/package.tgz
+41 verbose stack Error: auth required for publishing
+41 verbose stack     at CachingRegistryClient.publish (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/npm-registry-client/lib/publish.js:30:14)
+41 verbose stack     at /Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/lib/publish.js:137:14
+41 verbose stack     at mapToRegistry (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/lib/utils/map-to-registry.js:62:3)
+41 verbose stack     at publish_ (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/lib/publish.js:108:3)
+41 verbose stack     at Array.<anonymous> (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/slide/lib/bind-actor.js:15:8)
+41 verbose stack     at LOOP (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/slide/lib/chain.js:15:14)
+41 verbose stack     at /Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/slide/lib/chain.js:18:7
+41 verbose stack     at done (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/lib/utils/lifecycle.js:132:5)
+41 verbose stack     at LOOP (/Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/slide/lib/chain.js:7:26)
+41 verbose stack     at /Users/pgwsmith/.nvm/versions/node/v7.7.2/lib/node_modules/npm/node_modules/slide/lib/chain.js:18:7
+42 verbose cwd /Users/pgwsmith/apps/lokum
+43 error Darwin 16.4.0
+44 error argv "/Users/pgwsmith/.nvm/versions/node/v7.7.2/bin/node" "/Users/pgwsmith/.nvm/versions/node/v7.7.2/bin/npm" "publish"
+45 error node v7.7.2
+46 error npm  v4.1.2
+47 error code ENEEDAUTH
+48 error need auth auth required for publishing
+49 error need auth You need to authorize this machine using `npm adduser`
+50 verbose exit [ 1, true ]
