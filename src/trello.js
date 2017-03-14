@@ -286,8 +286,16 @@ function renderMetaCards(cards) {
             // Convenience via tags
             const { text, tags } = card.element || parseElement(card.name)
             if (tags.css) {
-                const cssURL = tags.css.text
-                return htmlElement('link', { rel: 'stylesheet', href: cssURL })
+                const cssURL = resolveContent(tags.css)
+                if (R.is(String, cssURL) && cssURL.length > 0) {
+                    return htmlElement('link', { rel: 'stylesheet', href: cssURL })
+                }
+                else if (card.desc.length > 0) {
+                    return htmlElement('style', {}, card.desc)
+                }
+                else {
+                    return ''
+                }
             }
             else {
                 return `<!-- Unknown '${card.name}' -->`
@@ -405,8 +413,15 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         const { html: contentHTML, children } = renderContentCards(contentCards, { defaultTitle: title, path })
 
-        const bodyHTML = globalAboveHTML + contentHTML  
-        const metaHTML = renderMetaCards(globalMetaCards.concat(metaCards))
+        const bodyHTML = globalAboveHTML + contentHTML 
+        let combinedMetaCards = globalMetaCards.concat(metaCards)
+        if (!R.any(isCSSCard, combinedMetaCards)) {
+            combinedMetaCards.push({
+                name: '#meta',
+                desc: require('./default/styleElement')
+            })
+        }
+        const metaHTML = renderMetaCards(combinedMetaCards)
 
         routes.push.apply(routes, createRoutesForHTML({
             path,
