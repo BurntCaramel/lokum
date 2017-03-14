@@ -99,10 +99,10 @@ Disallow:
                 return
             }
 
-            console.log(request.url, request.params)
+            //console.log(request.url, request.params)
             reloadableServer.inject(request.url.href)
             .then((innerResponse) => {
-                console.log(innerResponse)
+                //console.log(innerResponse)
                 const outerResponse = reply(innerResponse.rawPayload)
                 outerResponse.code(innerResponse.statusCode)
                 Object.keys(innerResponse.headers).map((key) => {
@@ -116,7 +116,7 @@ Disallow:
 
     return reloadFromTrello()
     .then(({ boardJSON, enhancedBoardJSON }) => {
-        console.log('Started server')
+        console.log('Started server on port', server.info.port)
         return {
             // Used for testing
             internal: {
