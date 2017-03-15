@@ -376,6 +376,9 @@ const promiseEnhancedCards = R.pipe(
 )
 
 function routesForTrelloData({ lists, cards: allCards }) {
+    // Ignore archived cards
+    lists = lists.filter(list => !list.closed)
+
     // Global
     const globalLists = lists.filter(({ name }) => name === '#all')
     const globalCardsGrouped = R.chain(({ id: listID }) => (
