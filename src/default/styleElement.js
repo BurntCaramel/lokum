@@ -69,6 +69,8 @@ section article, dd, dl, figure {
 	width:auto;
 }
 img {
+	display: block;
+	margin: auto;
 	max-width: 100%;
 	height: auto;
 }
