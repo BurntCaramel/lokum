@@ -24,4 +24,4 @@ function htmlElement(tagName, attributes, text) {
     return `<${tagName} ${attributeString}>${ text }</${tagName}>`
 }
 
-module.exports = htmlElement;
+module.exports = htmlElement

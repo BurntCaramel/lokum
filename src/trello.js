@@ -40,6 +40,18 @@ function cardsForID(listID, allCards) {
     return allCards.filter((card) => (card.idList === listID) && (!card.closed))
 }
 
+const filterDownloadAttachments = R.filter(R.allPass([
+    R.propEq('isUpload', true),
+    R.propSatisfies(R.isEmpty, 'previews'),
+]))
+
+const filterLinkAttachmentsURLs = R.pipe(
+    R.filter(
+        R.propEq('isUpload', false)
+    ),
+    R.pluck('url')
+)
+
 function resolveContent(content, defaultValue, transformer = R.identity) {
     if (!content) {
         return defaultValue
@@ -206,11 +218,18 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
             descriptionHTML = renderMarkdown(desc)
         }
 
+        // Add images
         if (imagesBefore) {
             output = imagesHTML + output + descriptionHTML
         }
         else {
             output = output + imagesHTML + descriptionHTML
+        }
+
+        // Attachment links
+        const downloadAttachments = filterDownloadAttachments(attachments)
+        if (downloadAttachments.length > 0) {
+            output += renderDownloadAttachmentList(downloadAttachments)
         }
 
         if (output.length > 0) {
@@ -299,6 +318,19 @@ function renderMetaCards(cards) {
     }).join('\n')
 }
 
+const renderDownloadAttachmentList = R.pipe(
+    R.map(R.pipe(
+        renderDownloadAttachmentLink,
+        (html) => htmlElement('li', {}, html)
+    )),
+    R.join("\n"),
+    (html) => htmlElement('ul', {}, html)
+)
+
+function renderDownloadAttachmentLink({ name, url }) {
+    return htmlElement('a', { href: url }, name)
+}
+
 function routesForRedirectCards(cards) {
     return cards.reduce((routes, { name }) => {
         const { text, tags } = parseElement(name)
@@ -317,13 +349,6 @@ function routesForRedirectCards(cards) {
         return routes
     }, [])
 }
-
-const filterLinkAttachmentsURLs = R.pipe(
-    R.filter(
-        R.propEq('isUpload', false)
-    ),
-    R.pluck('url')
-)
 
 const promiseEnhancedCards = R.pipe(
     R.map((card) => {
