@@ -8,16 +8,18 @@ const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
 const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
-
-const cardHasName = R.propEq('name')
-const cardNameRegex = R.pipe(
+const itemNameRegex = R.pipe(
     R.test,
     R.propSatisfies(R.__, 'name')
 )
-const isStrictMetaCard = cardHasName('#meta')
-const isCSSCard = cardNameRegex(/\B#css:/)
-const isLanguageCard = cardNameRegex(/\B#language:/)
-const isAboveContentCard = cardHasName('#above')
+const isPageList = itemNameRegex(/\B#path:/)
+const isHomePageList = itemNameRegex(/\B#path:\s*\/\B/)
+
+const itemHasName = R.propEq('name')
+const isStrictMetaCard = itemHasName('#meta')
+const isCSSCard = itemNameRegex(/\B#css:/)
+const isLanguageCard = itemNameRegex(/\B#language:/)
+const isAboveContentCard = itemHasName('#above')
 
 const groupCards = R.pipe(
     R.groupBy(R.cond([
@@ -66,7 +68,7 @@ const articlesMode = {
 
 const navMode = {
     sectionTag: 'nav',
-    itemTag: 'div'
+    itemTag: null
 }
 
 function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
@@ -385,7 +387,18 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const globalAboveCards = R.chain(({ aboveCards }) => aboveCards, globalCardsGrouped)
     const { html: globalAboveHTML } = htmlForCards(globalAboveCards)
 
-    return lists.reduce((routes, { name: listName, id: listID }) => {
+    const getCombinedMetaCards = (additionalCards) => {
+        let combinedMetaCards = globalMetaCards.concat(additionalCards)
+        if (!R.any(isCSSCard, combinedMetaCards)) {
+            combinedMetaCards.push({
+                name: '#meta',
+                desc: require('./default/styleElement')
+            })
+        }
+        return combinedMetaCards
+    }
+
+    let routes =  lists.reduce((routes, { name: listName, id: listID }) => {
         const cards = cardsForID(listID, allCards)
 
         // Redirects
@@ -410,14 +423,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
         const { html: contentHTML, children } = renderContentCards(contentCards, { defaultTitle: title, path })
 
         const bodyHTML = globalAboveHTML + contentHTML 
-        let combinedMetaCards = globalMetaCards.concat(metaCards)
-        if (!R.any(isCSSCard, combinedMetaCards)) {
-            combinedMetaCards.push({
-                name: '#meta',
-                desc: require('./default/styleElement')
-            })
-        }
-        const metaHTML = renderMetaCards(combinedMetaCards)
+        const metaHTML = renderMetaCards(getCombinedMetaCards(metaCards))
 
         routes.push.apply(routes, createRoutesForHTML({
             path,
@@ -449,6 +455,30 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         return routes
     }, [])
+
+    const hasHomePageList = R.any(isHomePageList, lists)
+    if (!hasHomePageList) {
+        const pageLists = lists.filter(isPageList)
+        routes.push.apply(routes, createRoutesForHTML({
+            path: '/',
+            htmlOptions: {
+                title: 'Home',
+                metaHTML: renderMetaCards(getCombinedMetaCards([])),
+                bodyHTML: renderContentHTML(
+                    htmlElement('nav', {}, pageLists.map(list => {
+                        const name = list.name
+                        const { text, tags } = parseElement(name)
+                        return htmlElement('h2', {}, htmlElement('a', {
+                            href: resolveContent(tags.path)
+                        }, text))
+                    }).join("\n")),
+                    'Home'
+                )
+            }
+        }))
+    }
+
+    return routes
 }
 
 module.exports = {

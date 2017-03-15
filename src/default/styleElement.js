@@ -24,6 +24,7 @@ body {
 header > *,
 section > *,
 main > article > *,
+main > nav > *,
 section article > * {
 	max-width:30rem;
 	margin-left:auto;
@@ -56,6 +57,7 @@ h2 {
 	top:.13333333299999994rem;
 }
 h3, nav dt {
+	font-size: 1rem;
 	text-transform:uppercase;
 	font-weight:700;
 }
