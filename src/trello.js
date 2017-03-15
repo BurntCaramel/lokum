@@ -148,20 +148,13 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         else if (text.length > 0) {
             output = text
 
-            let tagName = 'p'
+            let tagName = 'h2' // #secondary by default
             let outerTagName
             let classes = []
 
             const baseClass = resolveContent(tags.class)
             if (baseClass) {
                 classes.push(baseClass)
-            }
-
-            if (tags.cta) {
-                tagName = 'span'
-            }
-            else {
-                tagName = 'h2' // #secondary by default
             }
 
             if (tags.figure) {
