@@ -32,7 +32,8 @@ section article > * {
 
 article > *,
 header > *,
-section > * {
+section > *,
+figure > * {
 	margin-bottom:1.333333333rem;
 }
 
