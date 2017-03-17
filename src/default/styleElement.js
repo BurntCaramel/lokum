@@ -24,6 +24,7 @@ body {
 header > *,
 section > *,
 main > article > *,
+main > nav > *,
 section article > * {
 	max-width:30rem;
 	margin-left:auto;
@@ -32,7 +33,8 @@ section article > * {
 
 article > *,
 header > *,
-section > * {
+section > *,
+figure > * {
 	margin-bottom:1.333333333rem;
 }
 
@@ -55,6 +57,7 @@ h2 {
 	top:.13333333299999994rem;
 }
 h3, nav dt {
+	font-size: 1rem;
 	text-transform:uppercase;
 	font-weight:700;
 }
@@ -69,6 +72,8 @@ section article, dd, dl, figure {
 	width:auto;
 }
 img {
+	display: block;
+	margin: auto;
 	max-width: 100%;
 	height: auto;
 }

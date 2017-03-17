@@ -8,16 +8,18 @@ const htmlElement = require('./htmlElement')
 const createRoutesForHTML = require('./createRoutesForHTML')
 const promiseEmbedInfoForURL = require('./promiseEmbedInfoForURL')
 
-
-const cardHasName = R.propEq('name')
-const cardNameRegex = R.pipe(
+const itemNameRegex = R.pipe(
     R.test,
     R.propSatisfies(R.__, 'name')
 )
-const isStrictMetaCard = cardHasName('#meta')
-const isCSSCard = cardNameRegex(/\B#css:/)
-const isLanguageCard = cardNameRegex(/\B#language:/)
-const isAboveContentCard = cardHasName('#above')
+const isPageList = itemNameRegex(/\B#path:/)
+const isHomePageList = itemNameRegex(/\B#path:\s*\/\B/)
+
+const itemHasName = R.propEq('name')
+const isStrictMetaCard = itemHasName('#meta')
+const isCSSCard = itemNameRegex(/\B#css:/)
+const isLanguageCard = itemNameRegex(/\B#language:/)
+const isAboveContentCard = itemHasName('#above')
 
 const groupCards = R.pipe(
     R.groupBy(R.cond([
@@ -37,6 +39,18 @@ const groupCards = R.pipe(
 function cardsForID(listID, allCards) {
     return allCards.filter((card) => (card.idList === listID) && (!card.closed))
 }
+
+const filterDownloadAttachments = R.filter(R.allPass([
+    R.propEq('isUpload', true),
+    R.propSatisfies(R.isEmpty, 'previews'),
+]))
+
+const filterLinkAttachmentsURLs = R.pipe(
+    R.filter(
+        R.propEq('isUpload', false)
+    ),
+    R.pluck('url')
+)
 
 function resolveContent(content, defaultValue, transformer = R.identity) {
     if (!content) {
@@ -66,7 +80,7 @@ const articlesMode = {
 
 const navMode = {
     sectionTag: 'nav',
-    itemTag: 'div'
+    itemTag: null
 }
 
 function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
@@ -148,7 +162,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
         else if (text.length > 0) {
             output = text
 
-            let tagName = 'p'
+            let tagName = 'h2' // #secondary by default
             let outerTagName
             let classes = []
 
@@ -157,14 +171,7 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
                 classes.push(baseClass)
             }
 
-            if (tags.cta) {
-                tagName = 'span'
-            }
-            else {
-                tagName = 'h2' // #secondary by default
-            }
-
-            if (tags.figure || (imagesHTML.length > 0 && !tags.slug)) {
+            if (tags.figure) {
                 itemTag = 'figure'
                 outerTagName = 'figcaption'
                 imagesBefore = true
@@ -211,11 +218,18 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
             descriptionHTML = renderMarkdown(desc)
         }
 
+        // Add images
         if (imagesBefore) {
             output = imagesHTML + output + descriptionHTML
         }
         else {
             output = output + imagesHTML + descriptionHTML
+        }
+
+        // Attachment links
+        const downloadAttachments = filterDownloadAttachments(attachments)
+        if (downloadAttachments.length > 0) {
+            output += renderDownloadAttachmentList(downloadAttachments)
         }
 
         if (output.length > 0) {
@@ -304,6 +318,19 @@ function renderMetaCards(cards) {
     }).join('\n')
 }
 
+const renderDownloadAttachmentList = R.pipe(
+    R.map(R.pipe(
+        renderDownloadAttachmentLink,
+        (html) => htmlElement('li', {}, html)
+    )),
+    R.join("\n"),
+    (html) => htmlElement('ul', {}, html)
+)
+
+function renderDownloadAttachmentLink({ name, url }) {
+    return htmlElement('a', { href: url }, name)
+}
+
 function routesForRedirectCards(cards) {
     return cards.reduce((routes, { name }) => {
         const { text, tags } = parseElement(name)
@@ -322,13 +349,6 @@ function routesForRedirectCards(cards) {
         return routes
     }, [])
 }
-
-const filterLinkAttachmentsURLs = R.pipe(
-    R.filter(
-        R.propEq('isUpload', false)
-    ),
-    R.pluck('url')
-)
 
 const promiseEnhancedCards = R.pipe(
     R.map((card) => {
@@ -376,6 +396,9 @@ const promiseEnhancedCards = R.pipe(
 )
 
 function routesForTrelloData({ lists, cards: allCards }) {
+    // Ignore archived cards
+    lists = lists.filter(list => !list.closed)
+
     // Global
     const globalLists = lists.filter(({ name }) => name === '#all')
     const globalCardsGrouped = R.chain(({ id: listID }) => (
@@ -389,7 +412,18 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const globalAboveCards = R.chain(({ aboveCards }) => aboveCards, globalCardsGrouped)
     const { html: globalAboveHTML } = htmlForCards(globalAboveCards)
 
-    return lists.reduce((routes, { name: listName, id: listID }) => {
+    const getCombinedMetaCards = (additionalCards) => {
+        let combinedMetaCards = globalMetaCards.concat(additionalCards)
+        if (!R.any(isCSSCard, combinedMetaCards)) {
+            combinedMetaCards.push({
+                name: '#meta',
+                desc: require('./default/styleElement')
+            })
+        }
+        return combinedMetaCards
+    }
+
+    let routes =  lists.reduce((routes, { name: listName, id: listID }) => {
         const cards = cardsForID(listID, allCards)
 
         // Redirects
@@ -414,14 +448,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
         const { html: contentHTML, children } = renderContentCards(contentCards, { defaultTitle: title, path })
 
         const bodyHTML = globalAboveHTML + contentHTML 
-        let combinedMetaCards = globalMetaCards.concat(metaCards)
-        if (!R.any(isCSSCard, combinedMetaCards)) {
-            combinedMetaCards.push({
-                name: '#meta',
-                desc: require('./default/styleElement')
-            })
-        }
-        const metaHTML = renderMetaCards(combinedMetaCards)
+        const metaHTML = renderMetaCards(getCombinedMetaCards(metaCards))
 
         routes.push.apply(routes, createRoutesForHTML({
             path,
@@ -453,6 +480,30 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         return routes
     }, [])
+
+    const hasHomePageList = R.any(isHomePageList, lists)
+    if (!hasHomePageList) {
+        const pageLists = lists.filter(isPageList)
+        routes.push.apply(routes, createRoutesForHTML({
+            path: '/',
+            htmlOptions: {
+                title: 'Home',
+                metaHTML: renderMetaCards(getCombinedMetaCards([])),
+                bodyHTML: renderContentHTML(
+                    htmlElement('nav', {}, pageLists.map(list => {
+                        const name = list.name
+                        const { text, tags } = parseElement(name)
+                        return htmlElement('h2', {}, htmlElement('a', {
+                            href: resolveContent(tags.path)
+                        }, text))
+                    }).join("\n")),
+                    'Home'
+                )
+            }
+        }))
+    }
+
+    return routes
 }
 
 module.exports = {
