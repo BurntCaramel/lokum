@@ -7,8 +7,8 @@ Manage your website’s content using a Trello board. [Watch it in action here.]
 ## Deploy with [Now](https://zeit.co/now)
 
 1. Install Now: https://zeit.co/now
-2. Find your public Trello board’s ID (e.g. mQ6WXDAQ1)
-3. Run, passing your board ID: `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ1`
+2. Find your public Trello board’s ID (e.g. mQ6WXDAQ)
+3. Run, passing your board ID: `now RoyalIcing/lokum -e TRELLO_BOARD_ID=mQ6WXDAQ`
 
 ## Live online preview
 
