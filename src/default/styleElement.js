@@ -25,10 +25,16 @@ header > *,
 section > *,
 main > article > *,
 main > nav > *,
+main + nav > *,
 section article > * {
 	max-width:30rem;
 	margin-left:auto;
 	margin-right:auto;
+}
+
+main,
+main + nav {
+	margin-bottom: 2.666666666rem;
 }
 
 article > *,
@@ -36,6 +42,10 @@ header > *,
 section > *,
 figure > * {
 	margin-bottom:1.333333333rem;
+}
+
+nav {
+	text-align: center;
 }
 
 header + section > h2:first-child,

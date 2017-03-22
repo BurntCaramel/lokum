@@ -20,17 +20,20 @@ const isStrictMetaCard = itemHasName('#meta')
 const isCSSCard = itemNameRegex(/\B#css:/)
 const isLanguageCard = itemNameRegex(/\B#language:/)
 const isAboveContentCard = itemHasName('#above')
+const isBelowContentCard = itemHasName('#below')
 
 const groupCards = R.pipe(
     R.groupBy(R.cond([
         [ R.anyPass([isStrictMetaCard, isCSSCard]), R.always('metaCards') ],
         [ isAboveContentCard, R.always('aboveCards') ],
+        [ isBelowContentCard, R.always('belowCards') ],
         [ isLanguageCard, R.always('languageCards') ],
         [ R.T, R.always('contentCards') ]
     ])),
     R.merge({
         metaCards: [],
         aboveCards: [],
+        belowCards: [],
         languageCards: [],
         contentCards: []
     })
@@ -83,7 +86,7 @@ const navMode = {
     itemTag: null
 }
 
-function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
+function renderCards(cards, { mode = {}, path = '/', title } = {}) {
     let sectionAttributes = {}
     let itemAttributes = {}
 
@@ -269,17 +272,17 @@ function htmlForCards(cards, { mode = {}, path = '/', title } = {}) {
     return { html, children, title }
 }
 
-function renderContentHTML(html, title) {
+function renderContentHTML(html, title, { mainTag = 'main', mainClass = 'content' } = {}) {
     if (title != null && title.length > 0) {
         const header = htmlElement('header', {}, htmlElement('h1', {}, title))
         html = `\n${header}\n${html}\n`
     }
 
-    return htmlElement('main', { class: 'content' }, html)
+    return htmlElement(mainTag, { class: mainClass }, html)
 }
 
 function renderContentCards(cards, { defaultTitle, path }) {
-    let { html, children, title } = htmlForCards(cards, { mode: standardMode, title: defaultTitle, path })
+    let { html, children, title } = renderCards(cards, { mode: standardMode, title: defaultTitle, path })
 
     html = renderContentHTML(html, title)
 
@@ -329,6 +332,16 @@ const renderDownloadAttachmentList = R.pipe(
 
 function renderDownloadAttachmentLink({ name, url }) {
     return htmlElement('a', { href: url }, name)
+}
+
+function renderSiteNavigation({ pageLists }) {
+    return htmlElement('nav', {}, pageLists.map(list => {
+        const name = list.name
+        const { text, tags } = parseElement(name)
+        return htmlElement('h2', {}, htmlElement('a', {
+            href: resolveContent(tags.path)
+        }, text))
+    }).join("\n"))
 }
 
 function routesForRedirectCards(cards) {
@@ -395,9 +408,13 @@ const promiseEnhancedCards = R.pipe(
     all
 )
 
-function routesForTrelloData({ lists, cards: allCards }) {
+function routesForTrelloData({ name: siteTitle, lists, cards: allCards }) {
     // Ignore archived cards
     lists = lists.filter(list => !list.closed)
+    // Lists that have #path
+    const pageLists = lists.filter(isPageList)
+    // Home
+    const hasHomePageList = R.any(isHomePageList, lists)
 
     // Global
     const globalLists = lists.filter(({ name }) => name === '#all')
@@ -410,7 +427,13 @@ function routesForTrelloData({ lists, cards: allCards }) {
     const globalMetaCards = R.chain(({ metaCards }) => metaCards, globalCardsGrouped)
     // Above
     const globalAboveCards = R.chain(({ aboveCards }) => aboveCards, globalCardsGrouped)
-    const { html: globalAboveHTML } = htmlForCards(globalAboveCards)
+    const { html: globalAboveHTML } = renderCards(globalAboveCards)
+    // Below
+    const globalBelowCards = R.chain(({ belowCards }) => belowCards, globalCardsGrouped)
+    const { html: globalBelowHTML } = renderCards(globalBelowCards)
+    // Nav
+    const showBelowNav = !hasHomePageList
+    const globalNavHTML = showBelowNav ? renderSiteNavigation({ pageLists }) : ''
 
     const getCombinedMetaCards = (additionalCards) => {
         let combinedMetaCards = globalMetaCards.concat(additionalCards)
@@ -447,7 +470,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         const { html: contentHTML, children } = renderContentCards(contentCards, { defaultTitle: title, path })
 
-        const bodyHTML = globalAboveHTML + contentHTML 
+        const bodyHTML = globalAboveHTML + contentHTML + globalNavHTML + globalBelowHTML
         const metaHTML = renderMetaCards(getCombinedMetaCards(metaCards))
 
         routes.push.apply(routes, createRoutesForHTML({
@@ -463,7 +486,7 @@ function routesForTrelloData({ lists, cards: allCards }) {
 
         if (children.length > 0) {
             children.forEach(({ slug, path, title, html: contentHTML }) => {
-                const bodyHTML = renderContentHTML(globalAboveHTML + contentHTML)
+                const bodyHTML = renderContentHTML(globalAboveHTML + contentHTML + globalNavHTML + globalBelowHTML)
 
                 routes.push.apply(routes, createRoutesForHTML({
                     path,
@@ -481,24 +504,13 @@ function routesForTrelloData({ lists, cards: allCards }) {
         return routes
     }, [])
 
-    const hasHomePageList = R.any(isHomePageList, lists)
     if (!hasHomePageList) {
-        const pageLists = lists.filter(isPageList)
         routes.push.apply(routes, createRoutesForHTML({
             path: '/',
             htmlOptions: {
                 title: 'Home',
                 metaHTML: renderMetaCards(getCombinedMetaCards([])),
-                bodyHTML: renderContentHTML(
-                    htmlElement('nav', {}, pageLists.map(list => {
-                        const name = list.name
-                        const { text, tags } = parseElement(name)
-                        return htmlElement('h2', {}, htmlElement('a', {
-                            href: resolveContent(tags.path)
-                        }, text))
-                    }).join("\n")),
-                    'Home'
-                )
+                bodyHTML: renderContentHTML(globalNavHTML, siteTitle)
             }
         }))
     }
