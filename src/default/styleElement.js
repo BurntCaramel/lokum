@@ -1,4 +1,7 @@
-const styleElement = `<style>
+const styleElement = ({
+	textColor = '#111',
+	backgroundColor = '#fbfbfb'
+}) => `<style>
 *{
 	margin:0;
 	padding:0;
@@ -18,8 +21,8 @@ body {
 	-webkit-hypens:auto;
 	-ms-hypens:auto;
 	hypens:auto;
-	color:#111;
-	background-color:#fbfbfb;
+	color: ${textColor};
+	background-color: ${backgroundColor};
 }
 header > *,
 section > *,
