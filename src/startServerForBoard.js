@@ -9,7 +9,8 @@ function startServerForBoard(boardID, {
     seo = true,
     reloadSecret,
     host,
-    port
+    port,
+    addRoutes
 } = {}) {
     const server = new Hapi.Server()
     server.connection({
@@ -44,9 +45,10 @@ Disallow:
     }
 
     let reloadableServer
+    let reloadableServerPromise
 
     function reloadFromTrello() {
-        return Axios.get(`https://trello.com/b/${ boardID }.json`)
+        reloadableServerPromise = Axios.get(`https://trello.com/b/${ boardID }.json`)
         .then(({ data: boardJSON }) => {
             console.log('Loaded content from Trello', boardID)
 
@@ -60,8 +62,25 @@ Disallow:
                 const reloadableConnection = reloadableServer.connection({ autoListen: false })
                 reloadableServer.route(routesForTrelloData(enhancedBoardJSON))
 
-                // Used for testing
-                return { boardJSON, enhancedBoardJSON }
+                // Used for testing: boardJSON, enhancedBoardJSON
+                return { boardJSON, enhancedBoardJSON, server: reloadableServer }
+            })
+        })
+
+        return reloadableServerPromise
+    }
+
+    function forwardReplyToInternalServer(request, reply) {
+        (reloadableServerPromise || reloadFromTrello())
+        .then(({ server }) => (
+            server.inject(request.url.href)
+        ))
+        .then((innerResponse) => {
+            //console.log(innerResponse)
+            const outerResponse = reply(innerResponse.rawPayload)
+            outerResponse.code(innerResponse.statusCode)
+            Object.keys(innerResponse.headers).map((key) => {
+                outerResponse.header(key, innerResponse.headers[key])
             })
         })
     }
@@ -93,24 +112,12 @@ Disallow:
     server.route({
         method: '*',
         path: '/{p*}',
-        handler(request, reply) {
-            if (!reloadableServer) {
-                reply(new Error('Content has not loaded from Trello'))
-                return
-            }
-
-            //console.log(request.url, request.params)
-            reloadableServer.inject(request.url.href)
-            .then((innerResponse) => {
-                //console.log(innerResponse)
-                const outerResponse = reply(innerResponse.rawPayload)
-                outerResponse.code(innerResponse.statusCode)
-                Object.keys(innerResponse.headers).map((key) => {
-                    outerResponse.header(key, innerResponse.headers[key])
-                })
-            })
-        }
+        handler: forwardReplyToInternalServer
     })
+
+    if (addRoutes) {
+        addRoutes(server)
+    }
 
     server.start()
 
