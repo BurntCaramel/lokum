@@ -440,7 +440,7 @@ function routesForTrelloData({ name: siteTitle, lists, cards: allCards }) {
         if (!R.any(isCSSCard, combinedMetaCards)) {
             combinedMetaCards.push({
                 name: '#meta',
-                desc: require('./default/styleElement')
+                desc: require('./default/styleElement')()
             })
         }
         return combinedMetaCards

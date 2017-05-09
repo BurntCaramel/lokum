@@ -1,7 +1,7 @@
 const styleElement = ({
 	textColor = '#111',
 	backgroundColor = '#fbfbfb'
-}) => `<style>
+} = {}) => `<style>
 *{
 	margin:0;
 	padding:0;
