@@ -1,4 +1,7 @@
-const styleElement = `<style>
+const styleElement = ({
+	textColor = '#111',
+	backgroundColor = '#fbfbfb'
+}) => `<style>
 *{
 	margin:0;
 	padding:0;
@@ -18,17 +21,23 @@ body {
 	-webkit-hypens:auto;
 	-ms-hypens:auto;
 	hypens:auto;
-	color:#111;
-	background-color:#fbfbfb;
+	color: ${textColor};
+	background-color: ${backgroundColor};
 }
 header > *,
 section > *,
 main > article > *,
 main > nav > *,
+main + nav > *,
 section article > * {
 	max-width:30rem;
 	margin-left:auto;
 	margin-right:auto;
+}
+
+main,
+main + nav {
+	margin-bottom: 2.666666666rem;
 }
 
 article > *,
@@ -36,6 +45,10 @@ header > *,
 section > *,
 figure > * {
 	margin-bottom:1.333333333rem;
+}
+
+nav {
+	text-align: center;
 }
 
 header + section > h2:first-child,
