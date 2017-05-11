@@ -1,0 +1,15 @@
+{
+  "name": "previewWebFromTrelloBoard",
+  "version": "0.1.0",
+  "description": "Preview Lofi content in Trello as web pages",
+  "main": "index.js",
+  "author": "Patrick Smith <patrick@burntcaramel.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "lokum": "^0.2.6"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-emulator": "1.0.0-alpha.18"
+  }
+}
