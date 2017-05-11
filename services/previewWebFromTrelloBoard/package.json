@@ -6,6 +6,7 @@
   "author": "Patrick Smith <patrick@burntcaramel.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "archiver": "^1.3.0",
     "axios": "^0.16.1",
     "lokum": "^0.2.6"
   },
