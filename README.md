@@ -17,6 +17,12 @@ You can preview your boards here: https://lokum.icing.space — just enter the I
 - My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [Made from this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)
 - Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [Made from this board](https://trello.com/b/kIL3DloM/icing-space)
 
+## Download a static website zip
+
+```
+https://us-central1-royal-icing.cloudfunctions.net/previewWebFromTrelloBoard/YOUR_BOARD_ID.zip
+```
+
 ## How to make a website board in Trello
 
 Lokum uses the lofi format of hashtagging text. Any trailing **#hashtags** are added as booleans, and any trailing **#hashtag: any text you like** become key-value pairs.
