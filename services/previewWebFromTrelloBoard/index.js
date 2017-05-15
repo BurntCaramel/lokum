@@ -1,24 +1,19 @@
 const Axios = require('axios')
 const Archiver = require('archiver')
 const { promiseEnhancedTrelloCards, routesForTrelloData } = require('lokum/lib/trello')
-
-function conformPath(path) {
-	if (path === '/' || path[path.length - 1] === '/') {
-		return path
-	}
-	else {
-		return path + '/'
-	}
-}
+const conformPath = require('./conformPath')
+const static = require('./static')
+const next = require('./next')
 
 exports.previewWebFromTrelloBoard = function previewWebFromTrelloBoard(req, res) {
 	const [ _empty, boardInput, ...pathComponents ] = req.path.split('/')
 
 	console.log('path', boardInput, pathComponents)
 
-	let [ boardID, type ] = boardInput.split('.')
+	let [ boardID, ...extra ] = boardInput.split('.')
 
-	const isZip = (type === 'zip')
+	const isZip = (extra.pop() === 'zip')
+	const isNextJS = isZip && (extra.shift() === 'next')
 
 	if (!boardID || boardID.length === 0) {
 		res.status(400).send('Pass a trello board ID: /:trelloBoardID/subpath')
@@ -43,26 +38,36 @@ exports.previewWebFromTrelloBoard = function previewWebFromTrelloBoard(req, res)
 					zlib: { level: 9 } // Sets the compression level.
 				})
 
-				archive.on('error', (err) => {
-					res.status(500).send(html)
+				archive.on('error', (error) => {
+					res.status(500).send({ error })
 				})
 
-				res.type('zip')
-				archive.pipe(res)
+				let fileContentsPromise = null
 
-				routes.forEach(({ path, handler }) => {
-					if (conformPath(path) !== path) {
-						return
-					}
+				if (isNextJS) {
+					fileContentsPromise = next.promiseFileContentsForRoutes(routes)
+				}
+				else if (extra.length === 0) {
+					fileContentsPromise = static.promiseFileContentsForRoutes(routes)
+				}
 
-					handler({}, (html) => {
-						archive.append(html, {
-							name: `${ conformPath(path).substring(1) }index.html`
+				if (fileContentsPromise) {
+					res.type('zip')
+					archive.pipe(res)
+
+					return fileContentsPromise.then(fileContents => {
+						Object.keys(fileContents).forEach(filePath => {
+							archive.append(fileContents[filePath], {
+								name: filePath
+							})
 						})
-					})
-				})
 
-				archive.finalize()
+						archive.finalize()
+					})
+				}
+				else {
+					res.status(404).send({ boardID, options: extra })
+				}
 			}
 			else {
 				const matchingRoute = routes.find(({ path }) => (
