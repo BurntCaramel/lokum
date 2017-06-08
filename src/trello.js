@@ -19,8 +19,8 @@ const itemHasName = R.propEq('name')
 const isStrictMetaCard = itemHasName('#meta')
 const isCSSCard = itemNameRegex(/\B#css:/)
 const isLanguageCard = itemNameRegex(/\B#language:/)
-const isAboveContentCard = itemHasName('#above')
-const isBelowContentCard = itemHasName('#below')
+const isAboveContentCard = itemNameRegex(/\B#above/)
+const isBelowContentCard = itemNameRegex(/\B#below/)
 
 const groupCards = R.pipe(
     R.groupBy(R.cond([
