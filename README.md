@@ -17,10 +17,17 @@ You can preview your boards here: https://lokum.icing.space — just paste the U
 - My portfolio: https://lokum.icing.space/#mQ6WXDAQ/ · [Made from this board](https://trello.com/b/mQ6WXDAQ/burntcaramel-com)
 - Royal Icing home page: https://lokum.icing.space/#kIL3DloM/ · [Made from this board](https://trello.com/b/kIL3DloM/icing-space)
 
-## Download a static website zip
+## Download a website zip
+
+### Static HTML
 
 ```
 https://us-central1-royal-icing.cloudfunctions.net/previewWebFromTrelloBoard/YOUR_BOARD_ID.zip
+```
+
+### [Next.js 3](https://github.com/zeit/next.js)
+```
+https://us-central1-royal-icing.cloudfunctions.net/previewWebFromTrelloBoard/YOUR_BOARD_ID.next.zip
 ```
 
 ## How to make a website board in Trello
