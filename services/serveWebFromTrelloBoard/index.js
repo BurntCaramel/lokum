@@ -1,9 +1,9 @@
 const Axios = require('axios')
 const Archiver = require('archiver')
 const { promiseEnhancedTrelloCards, routesForTrelloData } = require('lokum/lib/trello')
-const conformPath = require('../conformPath')
-const static = require('../static')
-const next = require('../next')
+const conformPath = require('lokum/lib/conformPath')
+const static = require('lokum/lib/static')
+const next = require('lokum/lib/next')
 
 exports.serveWebFromTrelloBoard = function serveWebFromTrelloBoard(req, res) {
 	const [ _empty, boardInput, ...pathComponents ] = req.path.split('/')

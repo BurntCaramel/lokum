@@ -23,12 +23,12 @@ You can preview your boards here: https://lokum.icing.space — just paste the U
 ### Static HTML
 
 ```
-https://us-central1-royal-icing.cloudfunctions.net/previewWebFromTrelloBoard/YOUR_BOARD_ID.zip
+https://us-central1-royal-icing.cloudfunctions.net/serveWebFromTrelloBoard/YOUR_BOARD_ID.zip
 ```
 
 ### [Next.js 3](https://github.com/zeit/next.js)
 ```
-https://us-central1-royal-icing.cloudfunctions.net/previewWebFromTrelloBoard/YOUR_BOARD_ID.next.zip
+https://us-central1-royal-icing.cloudfunctions.net/serveWebFromTrelloBoard/YOUR_BOARD_ID.next.zip
 ```
 
 ## How to make a website board in Trello

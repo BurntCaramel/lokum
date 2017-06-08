@@ -203,15 +203,9 @@ assert-plus@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-0.2.0.tgz#d74e1b87e7affc0db8aadb7021f3fe48101ab234"
 
-async@^2.0.0, async@^2.4.0:
+async@^2.0.0, async@^2.0.1, async@^2.1.2, async@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.4.0.tgz#4990200f18ea5b837c2cc4f8c031a6985c385611"
-  dependencies:
-    lodash "^4.14.0"
-
-async@^2.0.1, async@^2.1.2, async@~2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/async/-/async-2.3.0.tgz#1013d1051047dd320fe24e494d5c66ecaf6147d9"
   dependencies:
     lodash "^4.14.0"
 
@@ -222,6 +216,12 @@ async@~0.9.0:
 async@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/async/-/async-1.0.0.tgz#f8fc04ca3a13784ade9e1641af98578cfbd647a9"
+
+async@~2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.3.0.tgz#1013d1051047dd320fe24e494d5c66ecaf6147d9"
+  dependencies:
+    lodash "^4.14.0"
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -1466,9 +1466,9 @@ log-driver@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/log-driver/-/log-driver-1.2.5.tgz#7ae4ec257302fd790d557cb10c97100d857b0056"
 
-lokum@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/lokum/-/lokum-0.2.6.tgz#c391b3d66a18dac98306f32b13adb0f20c376631"
+lokum@^0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/lokum/-/lokum-0.2.9.tgz#028fc753a062ed86bdd78f0af4a54acc93b31d8a"
   dependencies:
     axios "^0.15.2"
     cheerio "^0.22.0"

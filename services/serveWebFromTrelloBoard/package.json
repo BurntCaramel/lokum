@@ -8,9 +8,14 @@
   "dependencies": {
     "archiver": "^1.3.0",
     "axios": "^0.16.1",
-    "lokum": "^0.2.6"
+    "lokum": "^0.2.9"
   },
   "devDependencies": {
     "@google-cloud/functions-emulator": "1.0.0-alpha.18"
+  },
+  "scripts": {
+    "test:start": "functions start",
+    "test:deploy": "functions deploy serveWebFromTrelloBoard --entry-point=serveWebFromTrelloBoard --trigger-http",
+    "deploy": "gcloud alpha functions deploy serveWebFromTrelloBoard --trigger-http --stage-bucket royal-icing-services"
   }
 }
