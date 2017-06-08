@@ -5,7 +5,7 @@ const selfClosingTags = new Set(['img', 'link', 'input', 'br', 'hr', 'source', '
 function htmlElement(tagName, attributes, text) {
     const attributeString = Object.keys(attributes).reduce((list, name) => {
         const value = attributes[name]
-        if (value != null) {
+        if (value != null && value !== "") {
             list.push(`${name}="${ escape(value) }"`)
         }
         return list
