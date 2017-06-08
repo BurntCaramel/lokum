@@ -1,16 +1,18 @@
-const conformPath = require('./conformPath')
+const conformPath = require('../conformPath')
 
 const packageJSONTemplate = {
   "main": "index.js",
   "dependencies": {
-    "next": "^2.3.1",
-    "postcss-loader": "^2.0.3",
+    //"next": "^2.4.1",
+    "next": "beta", // To allow version 3 with static building
+    //"postcss-loader": "^2.0.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
   "scripts": {
     "dev": "next",
     "build": "node_modules/.bin/next build",
+    "build:static": "node_modules/.bin/next build && node_modules/.bin/next export",
     "start": "node_modules/.bin/next start"
   }
 }
@@ -20,6 +22,7 @@ function pageContent(pageHTML) {
 
   headHTML = headHTML.replace(/[\s\S]*<head>/, '')
   headHTML = headHTML.replace('</head>', '')
+  // Add closing /> for JSX, e.g. <link> => <link />
   headHTML = headHTML.replace(/<link([^>]+)>/g, '<link$1/>')
   headHTML = headHTML.replace(/<meta([^>]+)>/g, '<meta$1/>')
   headHTML = headHTML.trim()
@@ -28,7 +31,7 @@ function pageContent(pageHTML) {
 
   innerHTML = innerHTML.replace(/(<\/body>[\s\S]*)$/, '')
 
-  // Add closing /> for JSX, e.g. <img> -> <img />
+  // Add closing /> for JSX, e.g. <img> => <img />
   innerHTML = innerHTML.replace(/<img([^>]+)>/g, '<img$1/>')
   innerHTML = innerHTML.replace(/<br([^>]+)>/g, '<br$1/>')
   innerHTML = innerHTML.replace(/<hr([^>]+)>/g, '<hr$1/>')

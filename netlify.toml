@@ -1,0 +1,3 @@
+[build]
+  command = "node ./services/buildWebStaticFromTrelloBoard/run.js"
+  publish = "build"

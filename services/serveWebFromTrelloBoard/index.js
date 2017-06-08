@@ -1,11 +1,11 @@
 const Axios = require('axios')
 const Archiver = require('archiver')
 const { promiseEnhancedTrelloCards, routesForTrelloData } = require('lokum/lib/trello')
-const conformPath = require('./conformPath')
-const static = require('./static')
-const next = require('./next')
+const conformPath = require('../conformPath')
+const static = require('../static')
+const next = require('../next')
 
-exports.previewWebFromTrelloBoard = function previewWebFromTrelloBoard(req, res) {
+exports.serveWebFromTrelloBoard = function serveWebFromTrelloBoard(req, res) {
 	const [ _empty, boardInput, ...pathComponents ] = req.path.split('/')
 
 	console.log('path', boardInput, pathComponents)
@@ -16,7 +16,7 @@ exports.previewWebFromTrelloBoard = function previewWebFromTrelloBoard(req, res)
 	const isNextJS = isZip && (extra.shift() === 'next')
 
 	if (!boardID || boardID.length === 0) {
-		res.status(400).send('Pass a trello board ID: /:trelloBoardID/subpath')
+		res.status(400).send('Pass a Trello board ID: /:trelloBoardID/subpath')
 		return
 	}
 

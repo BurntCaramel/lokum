@@ -14,7 +14,8 @@
     "start": "node ./start.js",
     "build": "babel --ignore '**/*.test.js' --presets es2015 -d lib/ src/",
     "prepublish": "npm run build",
-    "test": "ava"
+    "test": "ava",
+    "site-build": "node ./services/buildWebStaticFromTrelloBoard/run.js"
   },
   "author": "Patrick Smith",
   "license": "MIT",

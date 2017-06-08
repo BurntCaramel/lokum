@@ -1,4 +1,4 @@
-const conformPath = require('./conformPath')
+const conformPath = require('../conformPath')
 
 function promiseFileContentsForRoutes(routes) {
   const fileContentsPromises = []

@@ -1,5 +1,5 @@
 {
-  "name": "previewWebFromTrelloBoard",
+  "name": "lokum-serve-web-trello",
   "version": "0.1.0",
   "description": "Preview Lofi content in Trello as web pages",
   "main": "index.js",
