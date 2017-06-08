@@ -95,10 +95,12 @@ function renderCards(cards, { mode = {}, path = '/', title } = {}) {
         const { text, tags } = parseElement(name)
 
         const draft = resolveContent(tags.draft, false)
+        // Skip drafts
         if (draft) {
             return combined
         }
 
+        // #nav
         if (tags.nav) {
             mode = navMode
             itemAttributes = {}
@@ -114,8 +116,8 @@ function renderCards(cards, { mode = {}, path = '/', title } = {}) {
             }
             return combined
         }
-
-        if (tags.article) {
+        // #article
+        else if (tags.article) {
             mode = articlesMode
             itemAttributes = {}
             const className = resolveContent(tags.class)
@@ -185,6 +187,7 @@ function renderCards(cards, { mode = {}, path = '/', title } = {}) {
             else if (tags.tertiary) {
                 tagName = 'h3'
             }
+            // TODO: remove
             else if (tags.text) {
                 tagName = 'p'
             }
@@ -218,7 +221,14 @@ function renderCards(cards, { mode = {}, path = '/', title } = {}) {
 
         let descriptionHTML = ''
         if (desc && desc.length > 0) {
-            descriptionHTML = renderMarkdown(desc)
+            if (tags.html) {
+                // Raw unsafe HTML
+                descriptionHTML = desc
+            }
+            else {
+                // Render Markdown
+                descriptionHTML = renderMarkdown(desc)
+            }
         }
 
         // Add images
