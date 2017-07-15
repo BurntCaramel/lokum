@@ -402,6 +402,7 @@ const promiseEnhancedCards = R.pipe(
                     }
                 })
                 .then(R.objOf('videoInfo'))
+                .catch(() => ({}))
             ) 
         }
 
