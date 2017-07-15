@@ -1,9 +1,9 @@
 const Axios = require('axios')
 const Path = require('path')
 const FS = require('fs')
-const { promiseEnhancedTrelloCards, routesForTrelloData } = require('../../lib/trello')
-const conformPath = require('../conformPath')
-const static = require('../static')
+const { promiseEnhancedTrelloCards, routesForTrelloData } = require('../../src/trello')
+const conformPath = require('../../src/conformPath')
+const static = require('../../src/static')
 
 exports.buildWebStaticFromTrelloBoard = function buildWebStaticFromTrelloBoard() {
   const boardID = process.env.BOARD_ID
